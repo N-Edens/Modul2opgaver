@@ -5,6 +5,7 @@ class Program
 {
     static void Main()
     {
+        // Opretter et array af Person objekter
         Person[] people = new Person[]
         {
             new Person { Name = "Jens Hansen", Age = 45, Phone = "+4512345678" },
@@ -15,9 +16,11 @@ class Program
             new Person { Name = "Rosa Jensen", Age = 22, Phone = "+4543217846" },
         };
 
-        // Calculate the total age of all people - Med brug af Linq
-        int totalAge = people.Sum(person => person.Age);
+        //Opgave 1
 
+        // Udregner den samlede alder for alle mennesker ved hjælp af LINQ
+        int totalAge = people.Sum(person => person.Age);
+        Console.WriteLine($"Den samlede alder for alle mennesker er: {totalAge}");
         /* Udregner den samlede alder for alle mennesker. - Med brug af løkker
         int totalAge = 0;
         for (int i = 0; i < people.Length; i++)
@@ -26,12 +29,9 @@ class Program
         }
         */
 
-        // Print the total age to the console
-        Console.WriteLine($"Den samlede alder for alle mennesker er: {totalAge}");
-
-        // Tæller hvor mange der hedder "Nielsen"  - med brug af Linq
+        // Tæller hvor mange der hedder "Nielsen" ved hjælp af LINQ
         int countNielsen = people.Where(person => person.Name.Contains("Nielsen")).Count();
-
+        Console.WriteLine($"Antallet af personer der hedder 'Nielsen' er: {countNielsen}");
         /*
         // Tæller hvor mange der hedder "Nielsen" - - Med brug af løkker
         int countNielsen = 0;
@@ -44,15 +44,14 @@ class Program
         }
         */
 
-        // Print the count of people with the name "Nielsen" to the console
-        Console.WriteLine($"Antallet af personer der hedder 'Nielsen' er: {countNielsen}");
-
-        // Tæller alle personer
+        // Tæller alle personer i arrayet
         int countPeople = people.Count();
+        Console.WriteLine($"Antallet af personer er {countPeople}");
 
-        // Print the count of all people to the console
-        Console.WriteLine($"Antallet af personer er  {countPeople}");
 
+        // Find den ældste person ved hjælp af LINQ
+        Person oldestPerson = people.OrderByDescending(person => person.Age).First();
+        Console.WriteLine($"Den ældste person er: {oldestPerson.Name}, {oldestPerson.Age} år gammel.");
         /*
         // Find den ældste person
         Person oldestPerson = null;
@@ -65,11 +64,14 @@ class Program
         }
         */
 
-        // Find den ældste person med LINQ
-        Person oldestPerson = people.OrderByDescending(person => person.Age).First();
-
-        // Print the oldest person to the console
-        Console.WriteLine($"Den ældste person er: {oldestPerson.Name}, {oldestPerson.Age} år gammel.");
+        // hvis gentagelser findes for Lavest alder 
+        // Find alle personer med den laveste alder ved hjælp af LINQ (hvis der er flere med samme laveste alder)
+        var youngestPeople = people.Where(person => person.Age == people.Min(p => p.Age));
+        Console.WriteLine($"De yngste personer er:");
+        foreach (var person in youngestPeople)
+        {
+            Console.WriteLine($"{person.Name}, {person.Age} år gammel.");
+        }
         /*
         // Find den yngste person med LINQ
         Person youngestPerson = people.OrderBy(person => person.Age).First();
@@ -79,21 +81,67 @@ class Program
         */
 
 
-       // hvis gentagelser findes for Lavest alder alder
-
-        // Find alle personer med den ældste alder med LINQ
-        var Youngestpeople = people.Where(person => person.Age == people.Min(p => p.Age));
-
-        // Print the oldest people to the console
-        Console.WriteLine($"De yngeste personer er:");
-        foreach (var person in Youngestpeople)
+    //Opgave 2
+        // Find og udskriv personen med mobilnummer “+4543215687”
+        var personWithPhoneNumber = people.FirstOrDefault(person => person.Phone == "+4543215687");
+        if (personWithPhoneNumber != null)
         {
-            Console.WriteLine($"{person.Name}, {person.Age} år gammel.");
+            Console.WriteLine($"Personen med mobilnummeret +4543215687 er: {personWithPhoneNumber.Name}");
         }
+        else
+        {
+            Console.WriteLine("Ingen personer med det angivne telefonnummer blev fundet.");
+        }
+        /* Find og udskriv personen med mobilnummer “+4543215687” ved hjælp af løkker
+        Person personWithPhoneNumber = null;
+        foreach (var person in people)
+        {
+            if (person.Phone == "+4543215687")
+            {
+                personWithPhoneNumber = person;
+                break; // Stop løkken når personen er fundet
+            }
+        }
+
+        if (personWithPhoneNumber != null)
+        {
+            Console.WriteLine($"Personen med mobilnummeret +4543215687 er: {personWithPhoneNumber.Name}");
+        }
+        else
+        {
+            Console.WriteLine("Ingen personer med det angivne telefonnummer blev fundet.");
+        }
+        */
+
+        // Vælg alle personer over 30 år og udskriv dem uden løkken
+        people.Where(person => person.Age > 30)
+              .ToList() // Konverter til en liste
+              .ForEach(person => Console.WriteLine($"{person.Name}, {person.Age} år gammel"));
+
+        // Lav et nyt array med de samme personer, men hvor "+45" er fjernet fra alle telefonnumre
+        var modifiedPhones = people.Select(person => new Person
+        {
+            Name = person.Name,
+            Age = person.Age,
+            Phone = person.Phone.Replace("+45", "")
+        }).ToList(); // Konverter til en liste
+        Console.WriteLine("Nyt array med telefonnumre uden +45:");
+        modifiedPhones.ForEach(person => Console.WriteLine($"{person.Name}, {person.Age} år gammel, Telefon: {person.Phone}"));
+
+
+        // Generér en string med navn og telefonnummer på de personer, der er yngre end 30, adskilt med komma
+        string result = string.Join(", ", people
+                                        .Where(person => person.Age < 30)
+                                        .Select(person => $"{person.Name} - {person.Phone}"));
+        Console.WriteLine("Navne og telefonnumre på personer under 30 år:");
+        Console.WriteLine(result);
+
+
     }
+
 }
 
-class Person
+    class Person
 {
     public string Name { get; set; } = "";
     public int Age { get; set; }
