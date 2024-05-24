@@ -162,7 +162,7 @@ class Program
         return (text) => string.Join(" ", text.Split(' ').Select(word => words.Contains(word) ? replacementWord : word));
     }
 }
-S
+
     class Person
 {
     public string Name { get; set; } = "";
