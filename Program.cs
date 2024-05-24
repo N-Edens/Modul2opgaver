@@ -136,10 +136,32 @@ class Program
         Console.WriteLine("Navne og telefonnumre på personer under 30 år:");
         Console.WriteLine(result);
 
+        // Test af CreateWordFilterFn
+        var badWords = new string[] { "shit", "fuck", "idiot" };
+        var FilterBadWords = CreateWordFilterFn(badWords);
+        Console.WriteLine(FilterBadWords("Sikke en gang shit")); // Forventet output: "Sikke en gang kage"
+        Console.WriteLine(FilterBadWords("shit fuck idiot")); // Forventet output: ""
 
+        // Test af CreateWordReplacerFn
+        var ReplaceBadWords = CreateWordReplacerFn(badWords, "kage");
+        Console.WriteLine(ReplaceBadWords("Sikke en gang shit")); // Forventet output: "Sikke en gang kage"
+        Console.WriteLine(ReplaceBadWords("shit fuck idiot")); // Forventet output: "kage kage kage"
     }
 
-}
+    // Funktion til at oprette et filter
+    static Func<string, string> CreateWordFilterFn(string[] words)
+    {
+        // Returner en funktion der fjerner uønskede ord fra en tekststreng
+        return (text) => string.Join(" ", text.Split(' ').Where(word => !words.Contains(word)));
+    }
+
+    // Funktion til at oprette en erstatningsfunktion
+    static Func<string, string> CreateWordReplacerFn(string[] words, string replacementWord)
+    {
+        // Returner en funktion der erstatter uønskede ord med et angivet ord i en tekststreng
+        return (text) => string.Join(" ", text.Split(' ').Select(word => words.Contains(word) ? replacementWord : word));
+    }
+
 
     class Person
 {
