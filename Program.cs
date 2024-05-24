@@ -81,7 +81,7 @@ class Program
         */
 
 
-    //Opgave 2
+        //Opgave 2
         // Find og udskriv personen med mobilnummer “+4543215687”
         var personWithPhoneNumber = people.FirstOrDefault(person => person.Phone == "+4543215687");
         if (personWithPhoneNumber != null)
@@ -161,8 +161,8 @@ class Program
         // Returner en funktion der erstatter uønskede ord med et angivet ord i en tekststreng
         return (text) => string.Join(" ", text.Split(' ').Select(word => words.Contains(word) ? replacementWord : word));
     }
-
-
+}
+S
     class Person
 {
     public string Name { get; set; } = "";
