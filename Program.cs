@@ -80,8 +80,10 @@ class Program
         Console.WriteLine($"Den yngste person er: {youngestPerson.Name}, {youngestPerson.Age} år gammel.");
         */
 
+        var PeopleSortedByAge = people.OrderBy(person => person.Age);
+        PeopleSortedByAge.ToList().ForEach(person => Console.WriteLine($"{person.Name} {person.Age}"));       
 
-        //Opgave 2
+
         // Find og udskriv personen med mobilnummer “+4543215687”
         var personWithPhoneNumber = people.FirstOrDefault(person => person.Phone == "+4543215687");
         if (personWithPhoneNumber != null)
