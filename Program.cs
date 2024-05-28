@@ -303,6 +303,96 @@ class Program
         //    - Arrays indekseres direkte ved hjælp af firkantede parenteser og en indeksværdi (f.eks. myArray[0]).
         //    - I en liste bruger vi metoder som .Add(), .Remove() osv. for at tilføje og fjerne elementer, selvom elementer også kan tilgås ved hjælp af indeksering, f.eks. myList[0].
 
+        var createGreeterFn = (string name) => {
+            return () => {
+                return "Hello, " + name;
+            };
+        };
+        var greetStuderende = createGreeterFn("studerende");
+        var greetUnderviser = createGreeterFn("underviser");
+        Console.WriteLine(greetStuderende()); // => "Hello, studerende"
+        Console.WriteLine(greetUnderviser()); // => "Hello, underviser"
+
+        // Opret en liste af tal
+        List<int> numbersList1 = new List<int> { 1, 2, 3, 4, 5 };
+
+        // Tilføj et element til listen
+        numbersList1.Add(6);
+
+        // Fjern et element fra listen
+        numbersList1.Remove(3);
+
+        // Konverter listen til et array
+        int[] numbersArray1 = numbersList1.ToArray();
+
+        // Udskriv elementerne i listen
+        Console.WriteLine("Liste af tal:");
+        foreach (var number in numbersList1)
+        {
+            Console.Write($"{number} ");
+        }
+        Console.WriteLine();
+
+        // Udskriv elementerne i arrayet
+        Console.WriteLine("Array af tal:");
+        foreach (var number in numbersArray1)
+        {
+            Console.Write($"{number} ");
+        }
+        Console.WriteLine();
+
+        // Opret en liste af ord
+        List<string> wordsList3 = new List<string> { "apple", "banana", "orange" };
+
+        // Tilføj et ord til listen
+        wordsList3.Add("grape");
+
+        // Fjern et ord fra listen
+        wordsList3.Remove("banana");
+
+        // Konverter listen til et array
+        string[] wordsArray1 = wordsList3.ToArray();
+
+        // Udskriv elementerne i listen
+        Console.WriteLine("Liste af ord:");
+        foreach (var word in wordsList3)
+        {
+            Console.Write($"{word} ");
+        }
+        Console.WriteLine();
+
+        // Udskriv elementerne i arrayet
+        Console.WriteLine("Array af ord:");
+        foreach (var word in wordsArray1)
+        {
+            Console.Write($"{word} ");
+        }
+        Console.WriteLine();
+
+        // Udskriv antallet af elementer i listen
+        Console.WriteLine($"Antal tal i listen: {numbersList1.Count}");
+        Console.WriteLine($"Antal ord i listen: {wordsList3.Count}");
+
+        // Sorter listen af tal i faldende rækkefølge
+        numbersList1.Sort((a, b) => b.CompareTo(a));
+
+        // Sorter listen af ord i stigende alfabetisk rækkefølge
+        wordsList3.Sort();
+
+        // Udskriv de sortererede lister
+        Console.WriteLine("Sorterede tal:");
+        foreach (var number in numbersList1)
+        {
+            Console.Write($"{number} ");
+        }
+        Console.WriteLine();
+
+        Console.WriteLine("Sorterede ord:");
+        foreach (var word in wordsList3)
+        {
+            Console.Write($"{word} ");
+        }
+        Console.WriteLine();
     }
 
     // Funktion til at oprette et filter
