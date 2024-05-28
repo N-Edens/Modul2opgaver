@@ -21,6 +21,10 @@ class Program
         // Udregner den samlede alder for alle mennesker ved hjælp af LINQ
         int totalAge = people.Sum(person => person.Age);
         Console.WriteLine($"Den samlede alder for alle mennesker er: {totalAge}");
+
+        // Kristian
+        var sumAge = people.Sum(person => person.Age);
+        Console.WriteLine(sumAge);
         /* Udregner den samlede alder for alle mennesker. - Med brug af løkker
         int totalAge = 0;
         for (int i = 0; i < people.Length; i++)
@@ -32,7 +36,10 @@ class Program
         // Tæller hvor mange der hedder "Nielsen" ved hjælp af LINQ
         int countNielsen = people.Where(person => person.Name.Contains("Nielsen")).Count();
         Console.WriteLine($"Antallet af personer der hedder 'Nielsen' er: {countNielsen}");
-        /*
+
+        // Kristian
+        var countNielsen1 = people.Count(p => p.Name.Contains("Nielsen"));
+        Console.WriteLine(countNielsen1);        /*
         // Tæller hvor mange der hedder "Nielsen" - - Med brug af løkker
         int countNielsen = 0;
         for (int i = 0; i < people.Length; i++)
@@ -102,14 +109,8 @@ class Program
 
         // Find og udskriv personen med mobilnummer “+4543215687”
         var personWithPhoneNumber = people.FirstOrDefault(person => person.Phone == "+4543215687");
-        if (personWithPhoneNumber != null)
-        {
-            Console.WriteLine($"Personen med mobilnummeret +4543215687 er: {personWithPhoneNumber.Name}");
-        }
-        else
-        {
-            Console.WriteLine("Ingen personer med det angivne telefonnummer blev fundet.");
-        }
+        Console.WriteLine(personWithPhoneNumber.Name);
+
         /* Find og udskriv personen med mobilnummer “+4543215687” ved hjælp af løkker
         Person personWithPhoneNumber = null;
         foreach (var person in people)
@@ -156,11 +157,12 @@ class Program
 
         var CreateWordFilterFn = (string[] words) =>
         {
-            return (string text) =>
+            return (string filterBadWords) =>
             {
-                return string.Join(" ", text.Split().Where(word => !words.Contains(word)));
+                return String.Join(" ", filterBadWords.Split(" ").Except(words));
             };
         };
+
 
         // Test af CreateWordFilterFn
         var badWords = new string[] { "shit", "fuck", "idiot" };
@@ -175,9 +177,14 @@ class Program
         {
             return (string text) =>
             {
-                return string.Join(" ", text.Split().Select(word => words.Contains(word) ? replacementWord : word));
+                foreach (var word in words)
+                {
+                    text = text.Replace(word, replacementWord);
+                }
+                return text;
             };
         };
+
         var ReplaceBadWords = CreateWordReplacerFn(badWords, "kage");
         Console.WriteLine(ReplaceBadWords("Sikke en gang shit")); // Forventet output: "Sikke en gang kage"
         Console.WriteLine(ReplaceBadWords("shit fuck idiot")); // Forventet output: "kage kage kage"
