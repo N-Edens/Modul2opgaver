@@ -16,7 +16,7 @@ class Program
             new Person { Name = "Rosa Jensen", Age = 22, Phone = "+4543217846" },
         };
 
-        //Opgave 1
+        // Opgave 1: Udregning og analyse af data vha. LINQ
 
         // Udregner den samlede alder for alle mennesker ved hjælp af LINQ
         int totalAge = people.Sum(person => person.Age);
@@ -146,6 +146,161 @@ class Program
         var ReplaceBadWords = CreateWordReplacerFn(badWords, "kage");
         Console.WriteLine(ReplaceBadWords("Sikke en gang shit")); // Forventet output: "Sikke en gang kage"
         Console.WriteLine(ReplaceBadWords("shit fuck idiot")); // Forventet output: "kage kage kage"
+
+        var personsOlderThan25 = people.Where(person => person.Age > 25);
+        personsOlderThan25.ToList().ForEach(person => Console.WriteLine($"{person.Name} er {person.Age} som er ældre end 25 år"));
+
+        /*var personsOlderThan25 = people.Where(person => person.Age > 25);
+        foreach (var person in personsOlderThan25)
+        {
+            Console.WriteLine($"{person.Name} er ældre end 25 år.");
+        }*/
+
+        var sortedPeopleByAge = people.OrderBy(person => person.Age);
+        sortedPeopleByAge.ToList().ForEach(person => Console.WriteLine($"{person.Name} er {person.Age} år gammel."));
+        /*var sortedPeopleByAge = people.OrderBy(person => person.Age);
+        foreach (var person in sortedPeopleByAge)
+        {
+            Console.WriteLine($"{person.Name} er {person.Age} år gammel.");
+        }*/
+        
+        // Gruppér personer efter aldersgruppe og udfør en handling på hver gruppe
+        var groupedPeopleByAgeGroup = people.GroupBy(person => person.Age / 10 * 10);
+        // Lambda-udtrykket (=>) bruges til at definere en anonym funktion, der tager en gruppe som parameter (group)
+        // og udfører en handling på denne gruppe
+        // Her repræsenterer 'group' hver gruppe i vores gruppebaserede LINQ-forespørgsel
+        // Notationen gør koden mere koncis og lettere at læse, især når vi arbejder med LINQ
+        groupedPeopleByAgeGroup.ToList().ForEach(group => Console.WriteLine($"Aldersgruppe: {group.Key} - Antal personer: {group.Count()}"));
+
+        var PersonerOver30 = people.Where(person =>person.Age > 30);
+        PersonerOver30.ToList().ForEach(person => Console.WriteLine($"{person.Name} er {person.Age} som er over 30 år"));
+
+        /* første klasses værdi
+        var lægToTalSammen = (x, y) => x + y; // En lambda-funktion
+        Console.WriteLine(lægToTalSammen(2, 2)); // Den printer "4".
+        */
+
+        // Herunder vises det hvor typen er angivet explicit
+        Func<int, int, int> lægToTalSammen = (x, y) => x + y;
+        Console.WriteLine(lægToTalSammen(2, 2)); // Den printer "4".
+
+
+        // Praktisk eksempel: Mapping
+        int[] array = new int[] { 2, 4, 6, 8, 10 };
+        // Anvend Select-metoden til at udføre en operation på hvert element i array'et
+        // Lambda-udtrykket (x => x * 2) specificerer, at hvert element 'x' skal ganges med 2
+        var res = array.Select(x => x * 2);
+        // Udskriv resultatet ved at konvertere det til en streng og sammenføje elementerne med et komma og et mellemrum
+        Console.WriteLine(string.Join(", ", res));
+        // Printer: 4, 8, 12, 16, 2015 / 24
+
+        // Praktisk eksempel: Filtrering
+        int[] array1 = new int[] { 2, 3, 4, 5, 6 };
+        // Anvend Where-metoden til at filtrere array'et og kun beholde de lige tal
+        // Lambda-udtrykket (x => x % 2 == 0) specificerer, at vi kun vil beholde tal, hvor resten af division med 2 er lig med 0 (altså de lige tal)
+        var evenNumbers = array1.Where(x => x % 2 == 0);
+        // Udskriv de filtrerede tal ved at konvertere dem til en streng og sammenføje dem med et komma og et mellemrum
+        Console.WriteLine(string.Join(", ", evenNumbers));
+        // Printer: 2, 4, 6
+
+
+        // Praktisk eksempel: Aggregering (Samling af sum)
+        int[] array2 = new int[] { 2, 3, 4, 5, 6 };
+        // Anvend Aggregate-metoden til at beregne den samlede sum af alle elementerne i array'et
+        // Lambda-udtrykket (sum, next) => sum + next specificerer, hvordan hvert element i array'et skal kombineres for at opnå den samlede sum
+        // 'sum' er det akkumulerede resultat hidtil, og 'next' er det næste element i array'et
+        var samletSum = array2.Aggregate((sum, next) => sum + next);
+        // Udskriv den samlede sum ved at konvertere den til en streng
+        Console.WriteLine(samletSum);
+        // Printer: 20
+
+        // Opret en liste af tal
+        var numbers = new int[] { 5, 3, 8, 2, 7 };
+
+        // First(): Tager det første element
+        var firstNumber = numbers.First();
+        Console.WriteLine($"Det første tal er: {firstNumber}");
+
+        // FirstOrDefault(): Her kan man angive en default-værdi hvis listen er tom
+        var firstOrDefaultNumber = numbers.FirstOrDefault();
+        Console.WriteLine($"Det første tal (eller default hvis listen er tom) er: {firstOrDefaultNumber}");
+
+        // Count(): Tæller antallet af elementer
+        var count = numbers.Count();
+        Console.WriteLine($"Antallet af tal er: {count}");
+
+        // Min() og Max(): Giver henholdsvis den mindste og største værdi i listen
+        var minNumber = numbers.Min();
+        var maxNumber = numbers.Max();
+        Console.WriteLine($"Det mindste tal er: {minNumber} og det største er {maxNumber}");
+
+        // ToList() og ToArray(): Konverterer en IEnumerable til en liste eller et array
+        var numbersList = numbers.ToList();
+        var numbersArray = numbers.ToArray();
+        Console.WriteLine($"Liste af tal: {string.Join(", ", numbersList)}");
+        Console.WriteLine($"Array af tal: {string.Join(", ", numbersArray)}");
+
+        // OrderBy(): Sorterer listen
+        var sortedNumbers = numbers.OrderBy(n => n);
+        Console.WriteLine($"Sorterede tal: {string.Join(", ", sortedNumbers)}");
+
+        // Range(): Opretter en liste af tal fra start til slut
+        var rangeOfNumbers = Enumerable.Range(1, 5);
+        Console.WriteLine($"Liste af tal fra 1 til 5: {string.Join(", ", rangeOfNumbers)}");
+
+        // Opret en liste af ord
+        var words = new string[] { "apple", "banana", "orange", "grape", "kiwi" };
+
+        // First(): Tager det første element
+        var firstWord = words.First();
+        Console.WriteLine($"Det første ord er: {firstWord}");
+
+        // FirstOrDefault(): Her kan man angive en default-værdi hvis listen er tom
+        var firstOrDefaultWord = words.FirstOrDefault();
+        Console.WriteLine($"Det første ord (eller default hvis listen er tom) er: {firstOrDefaultWord}");
+
+        // Count(): Tæller antallet af elementer
+        var countword = words.Count();
+        Console.WriteLine($"Antallet af ord er: {countword}");
+
+        // Min() og Max(): Giver henholdsvis det første og sidste ord i alfabetisk rækkefølge
+        var minWord = words.Min();
+        var maxWord = words.Max();
+        Console.WriteLine($"Det første ord i alfabetisk rækkefølge er: {minWord}");
+        Console.WriteLine($"Det sidste ord i alfabetisk rækkefølge er: {maxWord}");
+
+        // ToList() og ToArray(): Konverterer en IEnumerable til en liste eller et array
+        var wordsList = words.ToList();
+        var wordsArray = words.ToArray();
+        Console.WriteLine($"Liste af ord: {string.Join(", ", wordsList)}");
+        Console.WriteLine($"Array af ord: {string.Join(", ", wordsArray)}");
+
+        // OrderBy(): Sorterer ordene efter længde
+        var sortedWordsByLength = words.OrderBy(w => w.Length);
+        Console.WriteLine($"Ordrækkefølge efter længde: {string.Join(", ", sortedWordsByLength)}");
+
+        // Range(): Opretter en liste af ord fra start til slut
+        var rangeOfWords = Enumerable.Range(1, 5).Select(i => $"word{i}");
+        Console.WriteLine($"Liste af ord fra 'word1' til 'word5': {string.Join(", ", rangeOfWords)}");
+
+        // Forskelle mellem en liste og et array:
+
+        // 1. Størrelse:
+        //    - Et array har en fast størrelse, der ikke kan ændres efter oprettelsen.
+        //    - En liste kan vokse dynamisk i størrelse efter behov.
+
+        // 2. Funktionalitet:
+        //    - List<T> klassen tilbyder funktioner som Tilføj, Fjern, Indsæt osv., hvilket gør det nemmere at administrere data.
+        //    - Arrays har ikke de samme indbyggede funktioner, så manuelle operationer er nødvendige for at ændre størrelsen eller tilføje/fjerne elementer.
+
+        // 3. Ydelse:
+        //    - Arrays kan være en smule hurtigere end lister, især med store datamængder, da de er mere kompakte og direkte i hukommelsen.
+        //    - Lister kan have ekstra overhead på grund af deres dynamiske natur.
+
+        // 4. Brug af indeksering:
+        //    - Arrays indekseres direkte ved hjælp af firkantede parenteser og en indeksværdi (f.eks. myArray[0]).
+        //    - I en liste bruger vi metoder som .Add(), .Remove() osv. for at tilføje og fjerne elementer, selvom elementer også kan tilgås ved hjælp af indeksering, f.eks. myList[0].
+
     }
 
     // Funktion til at oprette et filter
@@ -161,6 +316,9 @@ class Program
         // Returner en funktion der erstatter uønskede ord med et angivet ord i en tekststreng
         return (text) => string.Join(" ", text.Split(' ').Select(word => words.Contains(word) ? replacementWord : word));
     }
+
+
+
 }
 
     class Person
