@@ -52,6 +52,20 @@ class Program
         // Find den ældste person ved hjælp af LINQ
         Person oldestPerson = people.OrderByDescending(person => person.Age).First();
         Console.WriteLine($"Den ældste person er: {oldestPerson.Name}, {oldestPerson.Age} år gammel.");
+
+        // Find den ældste person ved hjælp af Max() metoden på alderen
+        int maxAge = people.Max(person => person.Age);
+        // Find den ældste person med denne alder
+        Person oldestPerson1 = people.First(person => person.Age == maxAge);
+        Console.WriteLine($"Den ældste person er: {oldestPerson1.Name}, {oldestPerson1.Age} år gammel.");
+
+        int minAge = people.Min(person => person.Age);
+        Person YougestPerson1 = people.First(person => person.Age == minAge);
+        Console.WriteLine($"Den yngeste person er: {YougestPerson1.Name}, {YougestPerson1.Age} år gammel.");
+
+        Person YoungestPerson = people.OrderBy(person => person.Age).First();
+        Console.WriteLine($"Den yngeste person er: {YoungestPerson.Name}, {YoungestPerson.Age} år gammel.");
+
         /*
         // Find den ældste person
         Person oldestPerson = null;
@@ -63,6 +77,8 @@ class Program
             }
         }
         */
+
+
 
         // hvis gentagelser findes for Lavest alder 
         // Find alle personer med den laveste alder ved hjælp af LINQ (hvis der er flere med samme laveste alder)
@@ -138,16 +154,34 @@ class Program
         Console.WriteLine("Navne og telefonnumre på personer under 30 år:");
         Console.WriteLine(result);
 
+        var CreateWordFilterFn = (string[] words) =>
+        {
+            return (string text) =>
+            {
+                return string.Join(" ", text.Split().Where(word => !words.Contains(word)));
+            };
+        };
+
         // Test af CreateWordFilterFn
         var badWords = new string[] { "shit", "fuck", "idiot" };
         var FilterBadWords = CreateWordFilterFn(badWords);
-        Console.WriteLine(FilterBadWords("Sikke en gang shit")); // Forventet output: "Sikke en gang kage"
+        Console.WriteLine(FilterBadWords("Sikke en gang shit")); // Forventet output: "Sikke en gang"
         Console.WriteLine(FilterBadWords("shit fuck idiot")); // Forventet output: ""
 
-        // Test af CreateWordReplacerFn
+        // 
+
+
+        var CreateWordReplacerFn = (string[] words, string replacementWord) =>
+        {
+            return (string text) =>
+            {
+                return string.Join(" ", text.Split().Select(word => words.Contains(word) ? replacementWord : word));
+            };
+        };
         var ReplaceBadWords = CreateWordReplacerFn(badWords, "kage");
         Console.WriteLine(ReplaceBadWords("Sikke en gang shit")); // Forventet output: "Sikke en gang kage"
         Console.WriteLine(ReplaceBadWords("shit fuck idiot")); // Forventet output: "kage kage kage"
+
 
         var personsOlderThan25 = people.Where(person => person.Age > 25);
         personsOlderThan25.ToList().ForEach(person => Console.WriteLine($"{person.Name} er {person.Age} som er ældre end 25 år"));
@@ -396,24 +430,28 @@ class Program
     }
 
     // Funktion til at oprette et filter
-    static Func<string, string> CreateWordFilterFn(string[] words)
+    // Denne funktion modtager et array af uønskede ord og returnerer en ny funktion,
+    // der fjerner de uønskede ord fra en tekststreng.
+   /* static Func<string, string> CreateWordFilterFn(string[] words)
     {
-        // Returner en funktion der fjerner uønskede ord fra en tekststreng
-        return (text) => string.Join(" ", text.Split(' ').Where(word => !words.Contains(word)));
-    }
+        // Returner en funktion, der fjerner uønskede ord fra en tekststreng
+        return (text) => string.Join(" ",                // Samler de tilbageværende ord til en tekststreng
+                                    text.Split(' ')       // Opdeler den givne tekststreng i ord
+                                        .Where(word => !words.Contains(word)));  // Filtrerer ordene og beholder kun dem, der ikke er inkluderet i det uønskede ord array
+    }*/
 
     // Funktion til at oprette en erstatningsfunktion
-    static Func<string, string> CreateWordReplacerFn(string[] words, string replacementWord)
-    {
-        // Returner en funktion der erstatter uønskede ord med et angivet ord i en tekststreng
-        return (text) => string.Join(" ", text.Split(' ').Select(word => words.Contains(word) ? replacementWord : word));
-    }
+    // Denne funktion modtager et array af uønskede ord og en erstatningsstreng og returnerer en ny funktion,
+    // der erstatter de uønskede ord med erstatningsstrengen i en tekststreng.
 
+    // ! betyder "ikke". Når det bruges sammen med en betingelse (!words.Contains(word)),
+    // betyder det, at ordet kun bliver inkluderet i den resulterende streng,
+    // hvis det ikke er inkluderet i det uønskede ord array.
 
 
 }
 
-    class Person
+class Person
 {
     public string Name { get; set; } = "";
     public int Age { get; set; }
